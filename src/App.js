@@ -1,26 +1,64 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { connect } from 'react-redux';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import Form from './components/Form';
+import ItemList from './components/ItemList';
+
+
+class App extends React.Component {
+  state= {
+    articles: [],
+  }
+
+
+  render() {
+    return (
+      <>
+      <div>
+        <h3>Liste de courses</h3>
+        <Form formTitle="Ajouter un article"
+        addArticle={this.props.addArticle}
+        />
+        <ItemList 
+        articles={this.props.articles}
+        editArticle={this.props.editArticle}
+        />
+      </div>
+      </>
+          
+    );
+  }
 }
 
-export default App;
+const addArticleActionCreator = (article) => {
+  return{
+    type: 'ADD_ARTICLE', 
+    payload: article
+  }
+}
+
+const editArticleActionCreator = (article) => {
+  return {
+    type: 'EDIT_ARTICLE',
+    payload: article
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    articles: state.articles
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addArticle: (article) => {
+      dispatch(addArticleActionCreator(article));
+    },
+    editArticle: (article) => {
+      dispatch(editArticleActionCreator(article))
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
